@@ -1,5 +1,7 @@
 package ec.edu.uce.ec.grupo.u2.pedidos.application;
 
+import java.util.Optional;
+
 import ec.edu.uce.ec.grupo.u2.pedidos.domain.model.Recargo;
 import ec.edu.uce.ec.grupo.u2.pedidos.domain.repository.RecargoRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,8 +19,12 @@ public class RecargoService {
         this.recargoRepository.create(recargo);
     }
 
-    public Recargo buscarPorID(Integer id) {
+    public Optional<Recargo> buscarPorID(Integer id) {
         return this.recargoRepository.read(id);
+    }
+
+    public Optional<Recargo> buscarPorBeneficiario(String beneficiario) {
+        return this.recargoRepository.readByBeneficiario(beneficiario);
     }
 
     public void actualizar(Recargo recargo) {

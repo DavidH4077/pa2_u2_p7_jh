@@ -1,39 +1,58 @@
 package ec.edu.uce.ec.grupo.u2.pedidos.infraestructure.persistence.repository;
 
+import java.util.List;
+import java.util.Optional;
+
 import ec.edu.uce.ec.grupo.u2.pedidos.domain.model.Pedido;
 import ec.edu.uce.ec.grupo.u2.pedidos.domain.repository.PedidoRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
-@ApplicationScoped 
+@ApplicationScoped
 public class PedidoRepositoryImpl implements PedidoRepository {
-    @Inject 
+
+    @Inject
     private EntityManager entityManager;
 
     @Override
     public void create(Pedido pedido) {
         this.entityManager.persist(pedido);
-        
     }
 
     @Override
-    public Pedido read(Integer id) {
-        
-        return this.entityManager.find(Pedido.class, id);
+    public Optional<Pedido> read(Integer id) {
+        Pedido pedido = this.entityManager.find(Pedido.class, id);
+        return Optional.ofNullable(pedido);
     }
 
     @Override
     public void update(Pedido pedido) {
-       this.entityManager.merge(pedido);
+        this.entityManager.merge(pedido);
     }
 
     @Override
     public void delete(Integer id) {
-        Pedido pedido=this.read(id);
-        this.entityManager.remove(pedido);
+        Optional<Pedido> pedido = this.read(id);
+        pedido.ifPresent(this.entityManager::remove);
     }
 
-    
+    @Override
+    public Optional<Pedido> readByNumber(String numero) {
+        try {
+            TypedQuery<Pedido> query = this.entityManager.createQuery(
+                    "SELECT p FROM Pedido p WHERE p.numero = :numeroVariable", Pedido.class);
+            query.setParameter("numeroVariable", numero);
+            return Optional.ofNullable(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
 
+    @Override
+    public List<Pedido> readAll() {
+        return null;
+    }
 }

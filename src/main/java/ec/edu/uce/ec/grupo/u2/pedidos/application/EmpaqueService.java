@@ -1,5 +1,7 @@
 package ec.edu.uce.ec.grupo.u2.pedidos.application;
 
+import java.util.Optional;
+
 import ec.edu.uce.ec.grupo.u2.pedidos.domain.model.Empaque;
 import ec.edu.uce.ec.grupo.u2.pedidos.domain.repository.EmpaqueRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -9,6 +11,7 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 @Transactional
 public class EmpaqueService {
+
     @Inject
     private EmpaqueRepository empaqueRepository;
 
@@ -16,8 +19,12 @@ public class EmpaqueService {
         this.empaqueRepository.create(empaque);
     }
 
-    public Empaque buscarPorID(Integer id) {
+    public Optional<Empaque> buscarPorID(Integer id) {
         return this.empaqueRepository.read(id);
+    }
+
+    public Optional<Empaque> buscarPorTipoEmpaque(String tipoEmpaque) {
+        return this.empaqueRepository.readByTipoEmpaque(tipoEmpaque);
     }
 
     public void actualizar(Empaque empaque) {

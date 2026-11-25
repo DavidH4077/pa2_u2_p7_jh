@@ -1,6 +1,7 @@
 package ec.edu.uce.ec.grupo.u2;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import ec.edu.uce.ec.grupo.u2.pedidos.application.CalificacionService;
 import ec.edu.uce.ec.grupo.u2.pedidos.application.EmpaqueService;
@@ -48,141 +49,155 @@ public class Main implements QuarkusApplication {
     public int run(String... args) throws Exception {
         System.out.println("Hello World");
 
-        // Create (insert)
-        Pedido pedido = new Pedido();
-        pedido.setProducto("Producto de prueba 2");
-        pedido.setPrecio(10.0);
-        pedido.setFecha(LocalDateTime.now());
-        this.pedidoService.guardar(pedido);
+        // ==================== PEDIDO ====================
+        // Insert
+        Pedido nuevoPedido = new Pedido();
+        nuevoPedido.setProducto("Producto 1");
+        nuevoPedido.setPrecio(10.0);
+        nuevoPedido.setFecha(LocalDateTime.now());
+        nuevoPedido.setNumero("PED-001");
+        this.pedidoService.guardar(nuevoPedido);
 
-        // Read (buscar)
-        Pedido pedido1 = this.pedidoService.buscarPorID(pedido.getId());
-        System.out.println("Pedido encontrado: " + pedido1);
+        // Read (buscar por ID)
+        Optional<Pedido> pedido = this.pedidoService.buscarPorID(100);
+        if (pedido.isPresent()) {
+            System.out.println("Pedido encontrado: " + pedido.get());
+        } else {
+            System.out.println("Pedido no encontrado");
+        }
 
-        // Update (actualizar)
-        pedido.setPrecio(200.0);
-        this.pedidoService.actualizar(pedido);
+        // Read by number
+        Optional<Pedido> pedidoByNumber = this.pedidoService.buscarPorNumero("PED-001");
+        if (pedidoByNumber.isPresent()) {
+            System.out.println("Pedido encontrado por número: " + pedidoByNumber.get());
+        } else {
+            System.out.println("Pedido no encontrado por número");
+        }
 
-        Pedido pedido2 = this.pedidoService.buscarPorID(pedido.getId());
-        System.out.println("Pedido actualizado: " + pedido2);
+        // ==================== CALIFICACION ====================
+        // Insert
+        Calificacion nuevaCalificacion = new Calificacion();
+        nuevaCalificacion.setCalificacion(10);
+        nuevaCalificacion.setComentario("Excelente producto");
+        nuevaCalificacion.setLlegaATiempo(true);
+        nuevaCalificacion.setCumpleExpectativas(true);
+        this.calificacionService.guardar(nuevaCalificacion);
 
-        // Delete (eliminar)
-        this.pedidoService.eliminar(pedido.getId());
+        // Read (buscar por ID)
+        Optional<Calificacion> calificacion = this.calificacionService.buscarPorID(100);
+        if (calificacion.isPresent()) {
+            System.out.println("Calificacion encontrada: " + calificacion.get());
+        } else {
+            System.out.println("Calificacion no encontrada");
+        }
 
-        // Create (insert)
-        Calificacion calificacion = new Calificacion();
-        calificacion.setCalificacion(10);
-        calificacion.setComentario("Excelente producto");
-        calificacion.setLlegaATiempo(true);
-        calificacion.setCumpleExpectativas(true);
-        this.calificacionService.guardar(calificacion);
+        // Read by comentario
+        Optional<Calificacion> calificacionByComentario = this.calificacionService.buscarPorComentario("Excelente producto");
+        if (calificacionByComentario.isPresent()) {
+            System.out.println("Calificacion encontrada por comentario: " + calificacionByComentario.get());
+        } else {
+            System.out.println("Calificacion no encontrada por comentario");
+        }
 
-        // Read (buscar)
-        Calificacion calificacion1 = this.calificacionService.buscarPorID(calificacion.getId());
-        System.out.println("Calificacion encontrada: " + calificacion1);
+        // ==================== EMPAQUE ====================
+        // Insert
+        Empaque nuevoEmpaque = new Empaque();
+        nuevoEmpaque.setTipoEmpaque("Plastico");
+        nuevoEmpaque.setPesoEmpaque(50);
+        nuevoEmpaque.setEsFragil(false);
+        nuevoEmpaque.setMensajeRegalo("Gracias por comprar");
+        this.empaqueService.guardar(nuevoEmpaque);
 
-        // Update (actualizar)
-        calificacion.setCalificacion(8);
-        calificacion.setComentario("Buen producto, entrega regular");
-        this.calificacionService.actualizar(calificacion);
+        // Read (buscar por ID)
+        Optional<Empaque> empaque = this.empaqueService.buscarPorID(100);
+        if (empaque.isPresent()) {
+            System.out.println("Empaque encontrado: " + empaque.get());
+        } else {
+            System.out.println("Empaque no encontrado");
+        }
 
-        Calificacion calificacion2 = this.calificacionService.buscarPorID(calificacion.getId());
-        System.out.println("Calificacion actualizada: " + calificacion2);
+        // Read by tipoEmpaque
+        Optional<Empaque> empaqueByTipo = this.empaqueService.buscarPorTipoEmpaque("Plastico");
+        if (empaqueByTipo.isPresent()) {
+            System.out.println("Empaque encontrado por tipo: " + empaqueByTipo.get());
+        } else {
+            System.out.println("Empaque no encontrado por tipo");
+        }
 
-        // Delete (eliminar)
-        this.calificacionService.eliminar(calificacion.getId());
+        // ==================== RECARGO ====================
+        // Insert
+        Recargo nuevoRecargo = new Recargo();
+        nuevoRecargo.setValorRecargo(2.40);
+        nuevoRecargo.setPorcentajeRecargo(0.15);
+        nuevoRecargo.setBeneficiario("David Herrera");
+        nuevoRecargo.setVoluntario(false);
+        this.recargoService.guardar(nuevoRecargo);
 
-        // Create (insert)
-        Empaque empaque = new Empaque();
-        empaque.setTipoEmpaque("Plastico");
-        empaque.setPesoEmpaque(50);
-        empaque.setEsFragil(false);
-        empaque.setMensajeRegalo("Gracias por comprar");
-        this.empaqueService.guardar(empaque);
+        // Read (buscar por ID)
+        Optional<Recargo> recargo = this.recargoService.buscarPorID(100);
+        if (recargo.isPresent()) {
+            System.out.println("Recargo encontrado: " + recargo.get());
+        } else {
+            System.out.println("Recargo no encontrado");
+        }
 
-        // Read (buscar)
-        Empaque empaque1 = this.empaqueService.buscarPorID(empaque.getId());
-        System.out.println("Empaque encontrado: " + empaque1);
+        // Read by beneficiario
+        Optional<Recargo> recargoByBeneficiario = this.recargoService.buscarPorBeneficiario("David Herrera");
+        if (recargoByBeneficiario.isPresent()) {
+            System.out.println("Recargo encontrado por beneficiario: " + recargoByBeneficiario.get());
+        } else {
+            System.out.println("Recargo no encontrado por beneficiario");
+        }
 
-        // Update (actualizar)
-        empaque.setTipoEmpaque("Carton reforzado");
-        empaque.setEsFragil(true);
-        this.empaqueService.actualizar(empaque);
+        // ==================== RESERVA STOCK ====================
+        // Insert
+        ReservaStock nuevaReserva = new ReservaStock();
+        nuevaReserva.setCodigoItem("040809");
+        nuevaReserva.setCantidadReservada(23);
+        nuevaReserva.setEstadoReserva("No disponible");
+        nuevaReserva.setFechaReserva(LocalDateTime.now());
+        this.reservaService.guardar(nuevaReserva);
 
-        Empaque empaque2 = this.empaqueService.buscarPorID(empaque.getId());
-        System.out.println("Empaque actualizado: " + empaque2);
+        // Read (buscar por ID)
+        Optional<ReservaStock> reserva = this.reservaService.buscarPorID(100);
+        if (reserva.isPresent()) {
+            System.out.println("Reserva encontrada: " + reserva.get());
+        } else {
+            System.out.println("Reserva no encontrada");
+        }
 
-        // Delete (eliminar)
-        this.empaqueService.eliminar(empaque.getId());
+        // Read by codigoItem
+        Optional<ReservaStock> reservaByCodigo = this.reservaService.buscarPorCodigoItem("040809");
+        if (reservaByCodigo.isPresent()) {
+            System.out.println("Reserva encontrada por código: " + reservaByCodigo.get());
+        } else {
+            System.out.println("Reserva no encontrada por código");
+        }
 
-        // Create (insert)
-        Recargo recargo = new Recargo();
-        recargo.setValorRecargo(2.40);
-        recargo.setPorcentajeRecargo(0.15);
-        recargo.setBeneficiario("David Herrera");
-        recargo.setVoluntario(false);
-        this.recargoService.guardar(recargo);
+        // ==================== SEGURO ====================
+        // Insert
+        Seguro nuevoSeguro = new Seguro();
+        nuevoSeguro.setTipoSeguro("Elite");
+        nuevoSeguro.setValorSeguro(65.23);
+        nuevoSeguro.setCoberturaSeguro("Nacional");
+        nuevoSeguro.setNumeroPoliza("01293221");
+        this.seguroService.guardar(nuevoSeguro);
 
-        // Read (buscar)
-        Recargo recargo1 = this.recargoService.buscarPorID(recargo.getId());
-        System.out.println("Recargo encontrado: " + recargo1);
+        // Read (buscar por ID)
+        Optional<Seguro> seguro = this.seguroService.buscarPorID(100);
+        if (seguro.isPresent()) {
+            System.out.println("Seguro encontrado: " + seguro.get());
+        } else {
+            System.out.println("Seguro no encontrado");
+        }
 
-        // Update (actualizar)
-        recargo.setValorRecargo(5.00);
-        recargo.setVoluntario(true);
-        this.recargoService.actualizar(recargo);
-
-        Recargo recargo2 = this.recargoService.buscarPorID(recargo.getId());
-        System.out.println("Recargo actualizado: " + recargo2);
-
-        // Delete (eliminar)
-        this.recargoService.eliminar(recargo.getId());
-
-        // Create (insert)
-        ReservaStock reserva = new ReservaStock();
-        reserva.setCodigoItem("040809");
-        reserva.setCantidadReservada(23);
-        reserva.setEstadoReserva("No disponible");
-        reserva.setFechaReserva(LocalDateTime.now());
-        this.reservaService.guardar(reserva);
-
-        // Read (buscar)
-        ReservaStock reserva1 = this.reservaService.buscarPorID(reserva.getId());
-        System.out.println("Reserva encontrada: " + reserva1);
-
-        // Update (actualizar)
-        reserva.setCantidadReservada(50);
-        reserva.setEstadoReserva("Disponible");
-        this.reservaService.actualizar(reserva);
-
-        ReservaStock reserva2 = this.reservaService.buscarPorID(reserva.getId());
-        System.out.println("Reserva actualizada: " + reserva2);
-
-        // Delete (eliminar)
-        this.reservaService.eliminar(reserva.getId());
-
-        // Create (insert)
-        Seguro seguro = new Seguro();
-        seguro.setTipoSeguro("Elite");
-        seguro.setValorSeguro(65.23);
-        seguro.setCoberturaSeguro("Nacional");
-        seguro.setNumeroPoliza("01293221");
-        this.seguroService.guardar(seguro);
-
-        // Read (buscar)
-        Seguro seguro1 = this.seguroService.buscarPorID(seguro.getId());
-        System.out.println("Seguro encontrado: " + seguro1);
-
-        // Update (actualizar)
-        seguro.setValorSeguro(120.50);
-        seguro.setCoberturaSeguro("Internacional");
-        this.seguroService.actualizar(seguro);
-
-        Seguro seguro2 = this.seguroService.buscarPorID(seguro.getId());
-        System.out.println("Seguro actualizado: " + seguro2);
-
-        // Delete (eliminar)
-        this.seguroService.eliminar(seguro.getId());
+        // Read by numeroPoliza
+        Optional<Seguro> seguroByPoliza = this.seguroService.buscarPorNumeroPoliza("01293221");
+        if (seguroByPoliza.isPresent()) {
+            System.out.println("Seguro encontrado por póliza: " + seguroByPoliza.get());
+        } else {
+            System.out.println("Seguro no encontrado por póliza");
+        }
 
         return 0;
     }

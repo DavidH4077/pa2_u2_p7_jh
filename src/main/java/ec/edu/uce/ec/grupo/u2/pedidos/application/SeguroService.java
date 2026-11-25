@@ -1,5 +1,7 @@
 package ec.edu.uce.ec.grupo.u2.pedidos.application;
 
+import java.util.Optional;
+
 import ec.edu.uce.ec.grupo.u2.pedidos.domain.model.Seguro;
 import ec.edu.uce.ec.grupo.u2.pedidos.domain.repository.SeguroRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -9,6 +11,7 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 @Transactional
 public class SeguroService {
+
     @Inject
     private SeguroRepository seguroRepository;
 
@@ -16,8 +19,12 @@ public class SeguroService {
         this.seguroRepository.create(seguro);
     }
 
-    public Seguro buscarPorID(Integer id) {
+    public Optional<Seguro> buscarPorID(Integer id) {
         return this.seguroRepository.read(id);
+    }
+
+    public Optional<Seguro> buscarPorNumeroPoliza(String numeroPoliza) {
+        return this.seguroRepository.readByNumeroPoliza(numeroPoliza);
     }
 
     public void actualizar(Seguro seguro) {
